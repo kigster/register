@@ -3,6 +3,7 @@
 [![Test Coverage](https://codeclimate.com/github/kigster/register/badges/coverage.svg)](https://codeclimate.com/github/kigster/register/coverage)
 [![Issue Count](https://codeclimate.com/github/kigster/register/badges/issue_count.svg)](https://codeclimate.com/github/kigster/register)
 
+
 # *Register* —  A Module Method Factory Pattern
 
 **Register** is a tiny library that can be included in a module that is to become a Façade to several application globals via auto-generated module-level methods.

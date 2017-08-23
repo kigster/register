@@ -1,0 +1,24 @@
+## MAC OS
+.DS_Store
+.idea/
+
+## TEXTMATE
+*.tmproj
+tmtags
+
+## EMACS
+*~
+\#*
+.\#*
+
+## VIM
+*.swp
+.rspec_status
+
+## PROJECT::GENERAL
+coverage
+rdoc
+pkg
+
+## PROJECT::SPECIFIC
+Gemfile.lock

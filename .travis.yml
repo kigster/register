@@ -2,9 +2,9 @@ sudo: false
 language: ruby
 cache: bundler
 rvm:
-  - 2.4.4
-  - 2.3.3
-  - 2.2.7
+- 2.4.4
+- 2.3.3
+- 2.2.7
 before_install: gem install bundler -v 1.15.4
 notifications:
   email:
@@ -17,7 +17,7 @@ notifications:
       secure: GcACCHmcmo99lYE5dgt2TmY4YIPMWr75q0Bkm4Lddegq/1eMXgcZDz00j8iHWtnveyJSjEUpZFQ9uyx+P7dvxT7D5gl43arKZEylS4vMRg9QRgZu7/ROrXbJtrUyKulFRUTdFrmOiK9nDKpAzlvLvMKC4kaQnn88Xtu9pYMU8y4n5fCtl29gZM9ZjVbrBBvV/SumnTDLla2oQ7oFgUZdZhQZ1qsevYknxNq4eIcvPDjbon+bovfsIISEVRSNo2C3yjO+mqWKed3jfuCA4taAZ8/aVVFEKURMH10HFms1CiC3lE/gF4YfBXsqKpjnB+bKjBcWox2FQrp96FulMEIfkKQrnuncO96o7MGHX9oNqKSMoycf3+SZFwNa+5Mfq7SBepbHYCoU7/ow31UTyStrc5idG19XzYgI85yjQHdzQN299Xf0O8cGf9q9qAu7rS7JlM3ekR+3rZYO+OxNYTF8rcW1fYIj6GKcbsV8BvuhAVQRFOsk/ibcIb2N7rGVd/ZbU4HAk3RE1ywt+XowinpIHktu2PQUPDNpgRQwM6xqZHO/7s9r7oW0ULmZCMLZ9CMKNjKzrQ9wfh90+v+FiEiUKsaVj4cCwF3PvhVYvxU2AKbCeHtSEb7K6to86+DYNoIKnGH1ryKoyCtyOTZpNMLGFt34Msv7WfEylhG+DpVMvkM=
 addons:
   code_climate:
-    repo_token: c71874cc22acffe1e2543d3388d3a96c73a65f0cfe17169dadd8de4a6c062c39
-# regular test configuration
+    repo_token:
+      secure: B1l5OpGEPsAzThXW1UnojquRMH/oIO1QPd/sgB0y0ymwU6l6wAWPiN5/JwGNJPSl2h/EwrK2aTroP7fUsn7J5UcGh8yaerMwNKbUXo5/VNVfMz0ZVzNwaWPjMdDtuSolhabwPMPP1afdm2YT+IZwrid8zRjSB8/OsSPr0LCrciftVDiaN3XMfXMIheEOUokkH/X+m+PxZlYbL1v36D+CyhhulItnlEbhavK4fzN8bpkno2uK/IvLmheUeXCGvHdxhHE04mXYoEZGP87PCbV5vJ9hiFMXx9TiN2F51Z0Qr0F07MQY/l/svwpWUsnGRL3xaM58a/JxDG7Z/Qipt+4UId67xXSMmibHzW2kcJo71odS8rXUkwuxHuYFbHBQvBstjimc4YFfrth8YnVUnFIv/a3y8bE3+ESt++LRj2MlK6trisxOrCwJtDNJq5fJw6evdGOogTQ186oaBR8/6pPbmOrZHKc0aCrguWvVc3NHwD9oZNoPqKZ5vU/5RysDfx9dljfTR1BoMxjs0UN+nlMryFXRTyNgkk0YsLD3VrxjLNl6ykcO7nYgxiyuWOiXxTzGai5NU4ihbSFqpFeQ973iEnAGlnX2Uz32rX/ZPwJeqpVRZZkmZyUZo4cFjYa/yKwCTIgx3m2zAfV6VqwEs6USSq1OhEEKVgFw+rfo8Bw2cyw=
 after_success:
-  - bundle exec codeclimate-test-reporter
+- bundle exec codeclimate-test-reporter

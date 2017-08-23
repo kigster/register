@@ -17,5 +17,22 @@ RSpec.describe Register do
     expect(Cache.planetary.name).to eq(:saturn)
   end
 
+  context 'invalid usage' do
+    it 'non-existing key ' do
+      expect { Cache.for(:boohahah) }.to raise_error(Register::NoSuchIdentifierError)
+    end
 
+    it 'adding already existing key' do
+      expect { Cache.register(:main, :boo) }.to raise_error(Register::AlreadyRegisteredError)
+    end
+
+    Register::RESERVED.each do |key|
+      it "adding already existing key #{key}" do
+        expect { Cache.register(key, :boo) }.to raise_error(Register::ReservedIdentifierError)
+      end
+    end
+
+  end
 end
+
+

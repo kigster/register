@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Konstantin Gredeskoul']
   spec.email         = ['kigster@gmail.com']
 
-  spec.summary       = %q{This is a simple module-level registry for application globals}
-  spec.description   = %q{This is a simple module-level registry for application global}
+  spec.summary   = %q{This is a simple module-level registry for application globals. Use it to wrap global connection pools, memcached connections, redis, even database connections, and register them within a top-level namespace module of your application. For example, instead of doing Rails.cache you could be doing MyApp.rails_cache or MyApp.redis_cache, etc.}
+  spec.description   = %q{This is a simple module-level registry for application globals. Use it to wrap global connection pools, memcached connections, redis, even database connections, and register them within a top-level namespace module of your application. For example, instead of doing Rails.cache you could be doing MyApp.rails_cache or MyApp.redis_cache, etc.}
   spec.homepage      = 'https://github.com/kigster/register'
   spec.license       = 'MIT'
 

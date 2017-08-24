@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{This is a simple module-level registry for application globals. Use it to wrap global connection pools, memcached connections, redis, even database connections, and register them within a top-level namespace module of your application. For example, instead of doing Rails.cache you could be doing MyApp.rails_cache or MyApp.redis_cache, etc.}
   spec.homepage      = 'https://github.com/kigster/register'
   spec.license       = 'MIT'
-
+  spec.files         = `git ls-files`.split($\).reject{ |f| f.match(%r{^(doc|spec|coverage|pkg)/}) }
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']

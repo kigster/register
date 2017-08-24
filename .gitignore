@@ -1,7 +1,8 @@
 ## MAC OS
 .DS_Store
 .idea/
-
+doc/
+.yardoc
 ## TEXTMATE
 *.tmproj
 tmtags

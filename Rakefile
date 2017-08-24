@@ -1,23 +1,35 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'yard'
+require 'colored2'
 
 def shell(*args)
-  puts "running: #{args.join(' ')}"
+  puts "running: #{args.join(' ').blue.bold}".yellow
   system(args.join(' '))
+end
+
+module Register
+  DIST_DIRS=%w(lib)
+  BIN_DIRS=%w()
 end
 
 task :permissions do
   shell('rm -rf pkg/')
-  shell('chmod -v o+r,g+r * */* */*/* */*/*/* */*/*/*/* */*/*/*/*/*')
-  shell('chmod -v o+x,g+x exe/* bin/*')
-  shell("find . -type d -exec chmod o+x,g+x {} \\;")
+  Register::BIN_DIRS.each do |dir|
+    shell("chmod -v o+rx,g+rx #{dir}/*")
+  end
+
+  Register::DIST_DIRS.each do |dir|
+    shell("chmod -v o+rx,g+rx #{dir}")
+    shell("find #{dir} -name '[a-z]*' -type d -exec chmod o+rx,g+rx {} \\; -print")
+    shell("find #{dir} -type f -exec chmod o+r,g+r {} \\; -print")
+  end
 end
 
 task :build => :permissions
 
 YARD::Rake::YardocTask.new(:doc) do |t|
-  t.files = %w(lib/**/*.rb exe/*.rb - README.md LICENSE)
+  t.files = %w(lib/**/*.rb exe/*.rb  - README.md LICENSE.txt )
   t.options.unshift('--title','Register - An easy way to create Mudule-level accessors to global resources')
   t.after = ->() { exec('open doc/index.html') }
 end

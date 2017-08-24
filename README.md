@@ -12,9 +12,11 @@ A good example is a register of several connections to either *Redis* or *MemCac
 
 ## Usage
 
+You need to create a module for each individual "store" — behind the scenes `Register` uses ruby `Hash`, but protects any write access to it using a local mutex to ensure thread-safety.
+
 ### Creating a Register
 
-To create a register module, just include `Register` in any ruby module: 
+To create a register module, just include `Register` in any of your custom ruby modules: 
 
 ```ruby
 require 'register'
@@ -24,9 +26,13 @@ module Cache
 end
 ```
 
-### Storing Items in the Register
+### Adding Items to the Register
 
-To add items to the register, call the `<<` method, passing an array of identifiers, followed by the actual item to store. In other words, the last items of the argument array is the actual item stored against each of the identifiers passed before it.
+To add items to the register, call the `#register` method on the module (or it's alias `.<<`, passing an array of identifiers first, followed by the actual item to store. 
+
+In other words, the very last item of the argument array is the actual item stored against each of the keys passed in an array before it.
+
+The `#register` method returns the item successfully stored, or raises one of several exceptions.
 
 ```ruby
 
@@ -34,66 +40,131 @@ To add items to the register, call the `<<` method, passing an array of identifi
 CacheStore = Struct.new(:name)
 
 # Register items associated with any one of the identifiers
-Cache.register :planetary, :cosmic, CacheStore.new(:saturn)
+Cache.register :planetary, 
+               :cosmic, 
+               CacheStore.new(:saturn)
+#=> #<struct CacheStore name=:saturn>
 
-# You can use << syntax which is an alias to #register, but 
-# then use << to append the actual item
-Cache.<< %i[primary main rails deploy] << CacheStore.new(:primary)
+# Use the block syntax to define the value:
+Cache.register(*%i[primary main rails deploy]) do
+  CacheStore.new(:primary)
+end
+#=> #<struct CacheStore name=:primary>
 
-Cache.<< %i[durable secondary] << CacheStore.new(:secondary)
+# Use the << method alias instead (just ensure the proper 
+# grouping of the arguments)
+Cache << %i[number].push(Math::PI)
+#=> 3.141592653589793
+
+# Using double << with () 
+Cache << (%i[durable secondary] << CacheStore.new(:secondary))
+#=> #<struct CacheStore name=:secondary>
 ```
 
-### Looking up (Fetching) Items from the Register
+#### Exceptions while Adding Items
+
+ * `AlreadyRegisteredError` is thrown when the key is already in the store, and the option `:ignore_if_exists` is not passed to the `register()` method;
+
+ * `ReservedIdentifierError` is thrown upon an attempt to register a keyword that is reserved (i.e. clashes with one of the methods on the blank `Module`).
+
+
+### Fetching an Item from the Register
 
 There are two ways to fetch the previously-stored item:
 
   1. Using the `#for(:name)` method
+
   2. Using the auto-generated module-level accessor
   
 In the first example, we would call `Cache.for(:planetary)` to fetch the cache store, while in the second case we would call `Cache.planetary` method, which provides additional guarantees: if the method is not there, something is definitely wrong.  
 
 ```ruby
-Cache.planetary.name should eq(:saturn)
-Cache.primary === Cache.main === Cache.rails === Cache.deploy
+Cache.cosmic
+# => #<struct CacheStore name=:saturn>
+Cache.planetary.name 
+# => :saturn
+Cache.primary == Cache.main == Cache.rails == Cache.deploy
+# => true
 Cache.durable.name = 'DURABLE'
-Cache.secondary.name # => 'DURABLE'
+# => 'DURABLE'
+Cache.secondary.name 
+# => 'DURABLE'
 ```
 
-Here is a more complete RSPec example:
+#### Exceptions while Fetching Items
 
-```ruby
-require 'rspec'
-require 'rspec/its'
-RSpec.describe Cache do
-  subject(:cache) { Cache }
-  its(:planetary) { should eq CachStore.new(:saturn) }    
-  its(:deploy) { should eq CachStore.new(:primary) }    
-  its(:durable) { should eq CachStore.new(:secondary) }
-  it 'should also respond to #for' do
-    expect(cache.for(:secondary)).to eq(CacheStore(:secondary))      
-  end
-end
-```
-    
-## Installation
+ * `NoSuchIdentifierError` is thrown upon lookup with method `#for` when no requested key was found in the store;
 
-    gem install register 
-
-## Note on Patches and Pull Requests
+## Contributing
  
  * Fork the project.
  * Make your feature addition or bug fix.
- * Add tests for it. This is important so I don't break it in a future version unintentionally.
- * Commit, do not mess with rakefile, version, or history. If you want to have your own version, that is fine but bump  version in a commit by itself I can ignore when I pull.
- * Send a pull request. Bonus points for topic branches.
+ * Add specs for it, as without tests the PR will be rejected.
+ * Do not change the version.
+ * Send a pull request, with a well worded description.
+
+
+There are some additional methods that will help you debug should things go weird:
+
+### Additional Methods: `#keys` and `#values`
+
+These two methods proxy into the underlying `Hash`. The `#values` method returns the uniq'd array of the values.
+
+```ruby
+# ap Cache.keys
+[
+    [0] :planetary,
+    [1] :cosmic,
+    [2] :primary,
+    [3] :main,
+    [4] :rails,
+    [5] :deploy,
+    [6] :durable,
+    [7] :secondary,
+    [8] :number
+]
+# ap Cache.store.values.uniq
+[
+    [0] #<Struct:CacheStore:0x7facd107c800
+        name = :saturn
+    >,
+    [1] #<Struct:CacheStore:0x7facd2836c98
+        name = :primary
+    >,
+    [2] #<Struct:CacheStore:0x7facd281fa98
+        name = :secondary
+    >,
+    [3] 3.141592653589793
+]
+```
+
+### Internal Storage
+
+This gem uses a plain ruby `Hash` to store the values, but protects write access with a `Mutex`. 
+
+While it is not advisable to manipulate the underlying storage, you can access it via `Cache.send(:store)`, i.e:
+
+```ruby
+Cache.send(:store).class
+# => Hash
+```
+
+## Installation
+
+    gem install register 
+    
+Or if you are using Bundler, add the following to your `Gemfile`:
+
+    gem 'register'        
 
 ## Copyright
 
-Copyright &copy; 2017 Konstantin Gredeskoul. See LICENSE for details.
+Copyright &copy; 2017 Konstantin Gredeskoul. See [LICENSE](LICENSE.txt) for details.
 
 ## Contributors
 
  * [Konstantin Gredeskoul](https://github.com/kigster)
+ * You?
  
  
 

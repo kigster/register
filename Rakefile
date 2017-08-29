@@ -3,7 +3,7 @@ require 'rspec/core/rake_task'
 require 'yard'
 
 def shell(*args)
-  puts "running: #{args.join(' ').blue.bold}".yellow
+  puts "running: #{args.join(' ')}"
   system(args.join(' '))
 end
 

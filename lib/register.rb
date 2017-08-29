@@ -1,5 +1,4 @@
 require 'register/version'
-require 'colored2'
 require 'forwardable'
 
 # **Register** is a tiny library that can be included in a module

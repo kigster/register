@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register/version'
 require 'forwardable'
 
@@ -40,30 +42,34 @@ require 'forwardable'
 #
 module Register
   class RegisterError < StandardError; end
+
   class AlreadyRegisteredError < RegisterError; end
+
   class NoSuchIdentifierError < RegisterError; end
+
   class ReservedIdentifierError < RegisterError; end
 
   RESERVED = (Register.methods + %i[for register keys values << add_method]).flatten.uniq.freeze
 
   def self.included(klass)
     klass.instance_eval do
-      @store = Hash.new
+      @store = {}
       @mutex = Mutex.new
+
       class << self
         extend Forwardable
         def_delegators :@store, :keys
         attr_accessor :mutex
 
-        def << *names, **opts, &block
+        def <<(*names, **opts, &block)
           names.flatten!
           item = block ? yield(self) : names.pop
           validate_reserved_keys!(names)
-          @mutex.synchronize do
-            validate_existing_keys!(names, opts)
-            names.each do |n|
-              store[n] = item
-              add_method(n)
+          if @mutex.locked?
+            accept(names, opts, item)
+          else
+            @mutex.synchronize do
+              accept(names, opts, item)
             end
           end
           item
@@ -85,27 +91,34 @@ module Register
 
         private
 
-        def store
-          @store
+        def accept(names, opts, item)
+          validate_existing_keys!(names, opts)
+          names.each do |n|
+            store[n] = item
+            add_method(n)
+          end
         end
+
+        attr_reader :store
 
         def add_method(id)
           return unless id.is_a?(Symbol)
-          unless self.respond_to?(id)
-            line_no     = __LINE__
-            method_defs = %Q!
-              def self.#{id}
-                store[:#{id}]
-              end\n!
-            module_eval method_defs, __FILE__, line_no
-          end
+
+          return if respond_to?(id)
+
+          line_no     = __LINE__
+          method_defs = %!
+            def self.#{id}
+              store[:#{id}]
+            end\n!
+          module_eval method_defs, __FILE__, line_no
         end
 
         def validate_reserved_keys!(names)
           reserved = names.select { |n| RESERVED.include?(n) }
-          unless reserved.empty?
-            raise ReservedIdentifierError, "The following keys are reserved and can not be used: #{reserved}"
-          end
+          return if reserved.empty?
+
+          raise ReservedIdentifierError, "The following keys are reserved and can not be used: #{reserved}"
         end
 
         def validate_existing_keys!(names, opts = {})
@@ -118,4 +131,3 @@ module Register
     end
   end
 end
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'register'
 
 module Cache
@@ -5,6 +7,3 @@ module Cache
 end
 
 CacheStore = Struct.new(:name)
-
-
-

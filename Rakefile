@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'yard'
@@ -8,8 +10,8 @@ def shell(*args)
 end
 
 module Register
-  DIST_DIRS=%w(lib)
-  BIN_DIRS=%w()
+  DIST_DIRS = %w(lib).freeze
+  BIN_DIRS = %w().freeze
 end
 
 task :permissions do
@@ -25,14 +27,14 @@ task :permissions do
   end
 end
 
-task :build => :permissions
+task build: :permissions
 
 YARD::Rake::YardocTask.new(:doc) do |t|
-  t.files = %w(lib/**/*.rb exe/*.rb  - README.md LICENSE.txt )
-  t.options.unshift('--title','Register - An easy way to create Mudule-level accessors to global resources')
-  t.after = ->() { exec('open doc/index.html') }
+  t.files = %w(lib/**/*.rb exe/*.rb - README.md LICENSE.txt)
+  t.options.unshift('--title', 'Register - An easy way to create Mudule-level accessors to global resources')
+  t.after = -> { exec('open doc/index.html') }
 end
 
 RSpec::Core::RakeTask.new(:spec)
 
-task :default => :spec
+task default: :spec

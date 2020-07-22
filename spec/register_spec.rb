@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require_relative 'support/cache'
 
 RSpec.describe Register do
-
   subject(:c) { Cache }
 
   before do
@@ -10,7 +11,7 @@ RSpec.describe Register do
     # Various ways of calling #register
     Cache.register :planetary, CacheStore.new(:saturn)
     Cache << %i[number].push(Math::PI)
-    Cache.register(*%i[primary main rails deploy]) do
+    Cache.register(:primary, :main, :rails, :deploy) do
       CacheStore.new(:primary)
     end
     Cache << (%i[durable secondary] << CacheStore.new(:secondary))
@@ -58,8 +59,5 @@ RSpec.describe Register do
         expect { Cache.register(key, :boo) }.to raise_error(Register::ReservedIdentifierError)
       end
     end
-
   end
 end
-
-

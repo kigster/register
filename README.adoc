@@ -4,6 +4,7 @@
 :sectnum:
 :toclevel: 4
 
+image:https://github.com/kigster/register/workflows/Ruby/badge.svg[RSpec & Rubocop, link=https://github.com/kigster/register/actions?query=workflow%3ARuby]
 image:https://travis-ci.org/kigster/register.svg?branch=master[Build Status,link=https://travis-ci.org/kigster/register]
 image:https://codeclimate.com/github/kigster/register/badges/gpa.svg[Code Climate,link=https://codeclimate.com/github/kigster/register]
 image:https://codeclimate.com/github/kigster/register/badges/coverage.svg[Test Coverage,link=https://codeclimate.com/github/kigster/register/coverage]

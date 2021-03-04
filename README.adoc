@@ -44,6 +44,8 @@ The `#register` method returns the item successfully stored, or raises one of se
 ----
 
 # Our "item" will be a simple cache store with a name:
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkigster%2Fregister.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkigster%2Fregister?ref=badge_shield)
+
 CacheStore = Struct.new(:name)
 
 # Register items associated with any one of the identifiers
@@ -171,3 +173,7 @@ Copyright &copy; 2017 Konstantin Gredeskoul. See link:LICENSE.txt[LICENSE] for d
 
 * https://github.com/kigster[Konstantin Gredeskoul]
 * You?
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fkigster%2Fregister.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fkigster%2Fregister?ref=badge_large)
